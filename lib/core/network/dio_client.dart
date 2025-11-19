@@ -16,7 +16,7 @@ class DioClient {
       BaseOptions(
         baseUrl: baseUrl,
         queryParameters: {'key': apiKey},
-        connectTimeout: const Duration(seconds: 20),
+        connectTimeout: const Duration(seconds: 100),
         receiveTimeout: const Duration(seconds: 20),
       ),
     );
