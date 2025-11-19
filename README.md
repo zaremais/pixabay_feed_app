@@ -1,16 +1,17 @@
-# pixabay_image_feed
+# Pixabay Feed App
 
-A new Flutter project.
+### Flutter • Riverpod • Dio • Clean Architecture • Infinite Scroll
 
-## Getting Started
+Простой и масштабируемый браузер изображений Pixabay с бесконечной прокруткой, отслеживаемыми запросами и чистой архитектурой
 
-This project is a starting point for a Flutter application.
+-  Бесконечная прокрутка списка
+-  Чистая архитектура
+-  Riverpod AsyncNotifier
+-  Быстрое сетевое взаимодействие с Dio
+-  Сетка с адаптивными изображениями
+-  Правильная логика пагинации
+-  Загрузка ключей ENV
+-  Масштабируемая структура проекта
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Demo](assets/demo.gif)
+git clone https://github.com/zaremais/pixabay_feed_app.git
