@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:pixabay_image_feed/core/config/themes/app_icons.dart';
+import 'package:pixabay_image_feed/features/pixabay/domain/entities/image_entity.dart';
 import 'package:pixabay_image_feed/features/pixabay/presentation/notifier/image_notifire.dart';
-import 'package:pixabay_image_feed/features/pixabay/presentation/widgets/custom_top_bar.dart';
+import 'package:pixabay_image_feed/features/pixabay/presentation/widgets/circle_button_notification.dart';
+import 'package:pixabay_image_feed/features/pixabay/presentation/widgets/error_text_widget.dart';
+import 'package:pixabay_image_feed/features/pixabay/presentation/widgets/image_details_sheet.dart';
+import 'package:pixabay_image_feed/features/pixabay/presentation/widgets/image_grid.dart';
+import 'package:pixabay_image_feed/features/pixabay/presentation/widgets/loading_indicator.dart';
+import 'package:pixabay_image_feed/features/pixabay/presentation/widgets/search_textfield_widget.dart';
 
 class PixabayScreen extends ConsumerStatefulWidget {
   const PixabayScreen({super.key});
@@ -12,18 +18,59 @@ class PixabayScreen extends ConsumerStatefulWidget {
 }
 
 class _PixabayScreenState extends ConsumerState<PixabayScreen> {
-  final ScrollController controller = ScrollController();
+  final ScrollController _scrollController = ScrollController();
+  final TextEditingController _searchController = TextEditingController();
+  bool _isLoadingNext = false;
 
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_onScroll);
+  }
 
-    controller.addListener(() {
-      if (controller.position.pixels >
-          controller.position.maxScrollExtent - 300) {
-        ref.read(imageListProvider.notifier).loadNextPage();
-      }
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 300) {
+      _loadNextPage();
+    }
+  }
+
+  Future<void> _loadNextPage() async {
+    if (_isLoadingNext) return;
+
+    setState(() {
+      _isLoadingNext = true;
     });
+
+    await ref.read(imageListProvider.notifier).loadNextPage();
+
+    setState(() {
+      _isLoadingNext = false;
+    });
+  }
+
+  Future<void> _onRefresh() async {
+    return ref.read(imageListProvider.notifier).refresh();
+  }
+
+  void _onSearchChanged(String query) {
+    ref.read(imageListProvider.notifier).changeQuery(query);
+  }
+
+  void _showImageDetail(ImageEntity image) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => ImageDetailSheet(image: image),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -31,129 +78,43 @@ class _PixabayScreenState extends ConsumerState<PixabayScreen> {
     final state = ref.watch(imageListProvider);
 
     return Scaffold(
+      backgroundColor: Colors.black,
       body: SafeArea(
-        child: state.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (err, st) => Center(
-            child: Text(
-              "Ошибка: $err",
-              style: const TextStyle(color: Colors.white),
-            ),
-          ),
-          data: (images) {
-            return Stack(
+        child: Column(
+          children: [
+            Row(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(54),
-                      topRight: Radius.circular(54),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: MasonryGridView.count(
-                      controller: controller,
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing: 16,
-                      itemCount: images.length + 1,
-                      itemBuilder: (context, index) {
-                        if (index == images.length) {
-                          return state.isLoading
-                              ? const Padding(
-                                  padding: EdgeInsets.all(12),
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                )
-                              : const SizedBox();
-                        }
-
-                        final img = images[index];
-                        final tags = img.tags.split(',');
-
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: IntrinsicHeight(
-                            child: Stack(
-                              fit: StackFit.expand,
-                              children: [
-                                Image.network(
-                                  img.previewUrl,
-                                  fit: BoxFit.cover,
-                                ),
-
-                                Positioned(
-                                  bottom: 0,
-                                  left: 0,
-                                  right: 0,
-                                  child: Container(
-                                    height: 80,
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.bottomCenter,
-                                        end: Alignment.topCenter,
-                                        colors: [
-                                          Colors.black.withValues(alpha: 0.9),
-                                          Colors.transparent,
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                                Positioned(
-                                  bottom: 12,
-                                  left: 12,
-                                  right: 12,
-                                  child: Text(
-                                    tags.isNotEmpty
-                                        ? tags.first
-                                        : 'Beautiful Image',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                CircleButtonNotification(icon: AppIcons.bell, badge: true),
+                Expanded(
+                  child: SearchTextField(
+                    searchController: _searchController,
+                    onSearchChanged: _onSearchChanged,
+                    hintText: 'Search images...',
                   ),
                 ),
-
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [
-                          Colors.black.withValues(alpha: 0.8),
-                          Colors.transparent,
-                        ],
-                        stops: [0.0, 0.6],
-                      ),
-                    ),
-                  ),
-                ),
-
-                Positioned(top: 0, left: 0, right: 0, child: CustomTopBar()),
               ],
-            );
-          },
+            ),
+
+            Expanded(
+              child: state.when(
+                loading: () => LoadingGridIndicator(),
+                error: (error, stackTrace) => ErrorTextWidget(
+                  error: 'Try Again',
+                  title: 'Something went wrong',
+                  onPressed: _onRefresh,
+                ),
+                data: (images) => ImageGrid(
+                  images: images,
+                  scrollController: _scrollController,
+                  isLoadingNext: _isLoadingNext,
+                  searchController: _searchController,
+                  onRefresh: _onRefresh,
+                  onImageTap: _showImageDetail,
+                  loadNextPage: _loadNextPage,
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

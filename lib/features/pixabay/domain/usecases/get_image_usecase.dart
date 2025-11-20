@@ -20,10 +20,11 @@ class GetImageUsecase extends BaseUsecase<List<ImageEntity>, ImageParams> {
 class ImageParams {
   final int page;
   final String query;
+  final int perPage;
 
-  ImageParams({required this.page, required this.query});
+  ImageParams({required this.page, required this.query, required this.perPage});
 
   JSON toJson() {
-    return {'page': page, 'query': query};
+    return {'page': page, 'query': query, 'per_page': perPage};
   }
 }

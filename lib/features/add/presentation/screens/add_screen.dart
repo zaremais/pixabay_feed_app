@@ -7,7 +7,13 @@ class AddScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Center(child: Text('Add Screen', style: TextStyle(fontSize: 24))),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [Text('Add Screen', style: TextStyle(fontSize: 24))],
+        ),
+      ),
     );
   }
 }

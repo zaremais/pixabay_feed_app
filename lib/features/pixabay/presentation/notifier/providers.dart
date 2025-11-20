@@ -13,7 +13,7 @@ final pixabayRemoteDataSourceProvider = Provider<PixabayRemoteDataSource>((
   ref,
 ) {
   final dioClient = ref.watch(dioClientProvider);
-  return PixabayRemoteDataSourceImpl(client: dioClient);
+  return PixabayRemoteDataSourceImpl(dioClient);
 });
 
 final pixabayRepositoryProvider = Provider<PixabayDomainRepository>((ref) {

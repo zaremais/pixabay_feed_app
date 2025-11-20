@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
+import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 
+@injectable
 class LoggerInterceptor extends Interceptor {
   final Logger logger = Logger(
     printer: PrettyPrinter(methodCount: 0, printEmojis: true),

@@ -19,7 +19,10 @@ import '../../features/pixabay/data/repositories/pixabay_repository._impl.dart'
 import '../../features/pixabay/domain/repositories/pixabay_domain_repository.dart'
     as _i603;
 import '../../features/pixabay/domain/usecases/get_image_usecase.dart' as _i793;
+import '../../features/pixabay/presentation/notifier/image_notifire.dart'
+    as _i339;
 import '../network/dio_client.dart' as _i667;
+import '../network/logger_interceptors.dart' as _i455;
 
 extension GetItInjectableX on _i174.GetIt {
   // initializes the registration of main-scope dependencies inside of GetIt
@@ -28,9 +31,11 @@ extension GetItInjectableX on _i174.GetIt {
     _i526.EnvironmentFilter? environmentFilter,
   }) {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
+    gh.factory<_i455.LoggerInterceptor>(() => _i455.LoggerInterceptor());
     gh.factory<_i667.DioClient>(() => _i667.DioClient());
+    gh.factory<_i339.ImagesNotifier>(() => _i339.ImagesNotifier());
     gh.lazySingleton<_i1015.PixabayRemoteDataSource>(
-      () => _i1015.PixabayRemoteDataSourceImpl(client: gh<_i667.DioClient>()),
+      () => _i1015.PixabayRemoteDataSourceImpl(gh<_i667.DioClient>()),
     );
     gh.lazySingleton<_i603.PixabayDomainRepository>(
       () => _i773.PixabayRepositoryImpl(
