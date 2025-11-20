@@ -40,28 +40,25 @@ class ImageGrid extends ConsumerWidget {
       color: Colors.white,
       child: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: MasonryGridView.count(
-              controller: scrollController,
-              padding: const EdgeInsets.all(16),
-              crossAxisCount: 2,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              itemCount: images.length + (isLoadingNext ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index == images.length && isLoadingNext) {
-                  return const LoadingGridIndicator();
-                }
+          MasonryGridView.count(
+            controller: scrollController,
 
-                final image = images[index];
-                return ImageItem(
-                  image: image,
-                  index: index,
-                  onTap: () => onImageTap(image),
-                );
-              },
-            ),
+            crossAxisCount: 2,
+            mainAxisSpacing: 12,
+            crossAxisSpacing: 12,
+            itemCount: images.length + (isLoadingNext ? 1 : 0),
+            itemBuilder: (context, index) {
+              if (index == images.length && isLoadingNext) {
+                return const LoadingGridIndicator();
+              }
+
+              final image = images[index];
+              return ImageItem(
+                image: image,
+                index: index,
+                onTap: () => onImageTap(image),
+              );
+            },
           ),
 
           Positioned(

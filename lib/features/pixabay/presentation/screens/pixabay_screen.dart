@@ -80,41 +80,45 @@ class _PixabayScreenState extends ConsumerState<PixabayScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                CircleButtonNotification(icon: AppIcons.bell, badge: true),
-                Expanded(
-                  child: SearchTextField(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  CircleButtonNotification(icon: AppIcons.bell, badge: true),
+
+                  Expanded(
+                    child: SearchTextField(
+                      searchController: _searchController,
+                      onSearchChanged: _onSearchChanged,
+                      hintText: 'Search images...',
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              Expanded(
+                child: state.when(
+                  loading: () => LoadingGridIndicator(),
+                  error: (error, stackTrace) => ErrorTextWidget(
+                    error: 'Try Again',
+                    title: 'Something went wrong',
+                    onPressed: _onRefresh,
+                  ),
+                  data: (images) => ImageGrid(
+                    images: images,
+                    scrollController: _scrollController,
+                    isLoadingNext: _isLoadingNext,
                     searchController: _searchController,
-                    onSearchChanged: _onSearchChanged,
-                    hintText: 'Search images...',
+                    onRefresh: _onRefresh,
+                    onImageTap: _showImageDetail,
+                    loadNextPage: _loadNextPage,
                   ),
                 ),
-              ],
-            ),
-
-            Expanded(
-              child: state.when(
-                loading: () => LoadingGridIndicator(),
-                error: (error, stackTrace) => ErrorTextWidget(
-                  error: 'Try Again',
-                  title: 'Something went wrong',
-                  onPressed: _onRefresh,
-                ),
-                data: (images) => ImageGrid(
-                  images: images,
-                  scrollController: _scrollController,
-                  isLoadingNext: _isLoadingNext,
-                  searchController: _searchController,
-                  onRefresh: _onRefresh,
-                  onImageTap: _showImageDetail,
-                  loadNextPage: _loadNextPage,
-                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

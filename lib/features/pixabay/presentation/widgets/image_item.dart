@@ -108,7 +108,7 @@ class ImageItem extends StatelessWidget {
                       const SizedBox(height: 4),
 
                       Text(
-                        'by ${image.user}',
+                        image.user,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.8),
                           fontSize: 10,

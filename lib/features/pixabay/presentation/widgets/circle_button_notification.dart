@@ -16,7 +16,7 @@ class CircleButtonNotification extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(10),
           child: Container(
             height: 40,
             width: 40,
