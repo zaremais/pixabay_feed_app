@@ -7,7 +7,7 @@ import 'package:pixabay_image_feed/features/pixabay/domain/usecases/get_image_us
 import 'package:pixabay_image_feed/features/pixabay/presentation/notifier/providers.dart';
 
 @injectable
-class ImagesNotifier extends AsyncNotifier<List<ImageEntity>> {
+class PixabayNotifier extends AsyncNotifier<List<ImageEntity>> {
   int page = 1;
   String query = "";
   bool _isLoadingNext = false;
@@ -22,7 +22,7 @@ class ImagesNotifier extends AsyncNotifier<List<ImageEntity>> {
 
   Future<List<ImageEntity>> _loadPage({bool reset = false}) async {
     try {
-      final usecase = ref.read(getImagesUsecaseProvider);
+      final usecase = ref.read(getPixabayUsecaseProvider);
 
       if (reset) {
         page = 1;
@@ -78,7 +78,3 @@ class ImagesNotifier extends AsyncNotifier<List<ImageEntity>> {
   }
 }
 
-final imageListProvider =
-    AsyncNotifierProvider<ImagesNotifier, List<ImageEntity>>(
-      ImagesNotifier.new,
-    );

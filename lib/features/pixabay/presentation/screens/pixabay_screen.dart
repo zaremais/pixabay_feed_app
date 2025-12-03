@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pixabay_image_feed/core/config/themes/app_icons.dart';
 import 'package:pixabay_image_feed/features/pixabay/domain/entities/image_entity.dart';
-import 'package:pixabay_image_feed/features/pixabay/presentation/notifier/image_notifire.dart';
+import 'package:pixabay_image_feed/features/pixabay/presentation/notifier/providers.dart';
 import 'package:pixabay_image_feed/features/pixabay/presentation/widgets/circle_button_notification.dart';
 import 'package:pixabay_image_feed/features/pixabay/presentation/widgets/error_text_widget.dart';
 import 'package:pixabay_image_feed/features/pixabay/presentation/widgets/image_details_sheet.dart';
@@ -42,7 +42,7 @@ class _PixabayScreenState extends ConsumerState<PixabayScreen> {
       _isLoadingNext = true;
     });
 
-    await ref.read(imageListProvider.notifier).loadNextPage();
+    await ref.read(pixabayProvider.notifier).loadNextPage();
 
     setState(() {
       _isLoadingNext = false;
@@ -50,11 +50,11 @@ class _PixabayScreenState extends ConsumerState<PixabayScreen> {
   }
 
   Future<void> _onRefresh() async {
-    return ref.read(imageListProvider.notifier).refresh();
+    return ref.read(pixabayProvider.notifier).refresh();
   }
 
   void _onSearchChanged(String query) {
-    ref.read(imageListProvider.notifier).changeQuery(query);
+    ref.read(pixabayProvider.notifier).changeQuery(query);
   }
 
   void _showImageDetail(ImageEntity image) {
@@ -75,7 +75,7 @@ class _PixabayScreenState extends ConsumerState<PixabayScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(imageListProvider);
+    final state = ref.watch(pixabayProvider);
 
     return Scaffold(
       backgroundColor: Colors.black,

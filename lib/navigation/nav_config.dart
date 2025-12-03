@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pixabay_image_feed/core/config/themes/app_icons.dart';
+import 'package:pixabay_image_feed/features/boards/presentation/screens/board_screen.dart';
 import 'package:pixabay_image_feed/features/home/presentation/screens/home_screen.dart';
+import 'package:pixabay_image_feed/features/images/presentation/screens/images_screen.dart';
+import 'package:pixabay_image_feed/features/pixabay/presentation/screens/inifiniti_screen.dart';
 
 class NavConfig {
   final Widget screen;
@@ -18,21 +21,22 @@ final navConfig = [
     ),
   ),
   NavConfig(
-    screen: const Center(child: Text("Boards Screen")),
+    screen: Center(child: BoardScreen()),
     barItem: BottomNavigationBarItem(
       icon: Icon(AppIcons.grid),
       label: "Boards",
     ),
   ),
+
   NavConfig(
-    screen: const Center(child: Text("Add Screen")),
+    screen: const Center(child: InfiniteListScreen()),
     barItem: BottomNavigationBarItem(
       icon: Image.asset('assets/images/tabadd.png'),
       label: "",
     ),
   ),
   NavConfig(
-    screen: const Center(child: Text("Messages Screen")),
+    screen: const Center(child: ImagesScreen()),
     barItem: BottomNavigationBarItem(
       icon: Icon(AppIcons.message, size: 34),
       label: "Messages",

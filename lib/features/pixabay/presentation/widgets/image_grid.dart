@@ -1,6 +1,5 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:pixabay_image_feed/features/pixabay/domain/entities/image_entity.dart';
 import 'package:pixabay_image_feed/features/pixabay/presentation/widgets/image_item.dart';
@@ -8,7 +7,7 @@ import 'package:pixabay_image_feed/features/pixabay/presentation/widgets/loading
 
 import 'empty_image_state.dart';
 
-class ImageGrid extends ConsumerWidget {
+class ImageGrid extends StatelessWidget {
   final List<ImageEntity> images;
   final ScrollController scrollController;
   final bool isLoadingNext;
@@ -29,7 +28,7 @@ class ImageGrid extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     if (images.isEmpty) {
       return EmptyImageState(searchController: searchController);
     }
