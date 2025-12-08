@@ -46,6 +46,8 @@ dependencies:
   get_it: ^9.0.5
   cached_network_image: ^3.4.1
   riverpod_annotation: ^3.0.3
+  animate_do: ^4.2.0
+  flutter_svg: ^2.2.3
 
  
 

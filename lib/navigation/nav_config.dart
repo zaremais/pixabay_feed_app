@@ -4,6 +4,7 @@ import 'package:pixabay_image_feed/features/boards/presentation/screens/board_sc
 import 'package:pixabay_image_feed/features/home/presentation/screens/home_screen.dart';
 import 'package:pixabay_image_feed/features/images/presentation/screens/images_screen.dart';
 import 'package:pixabay_image_feed/features/pixabay/presentation/screens/inifiniti_screen.dart';
+import 'package:pixabay_image_feed/features/profile/presentation/screens/profile_screen.dart';
 
 class NavConfig {
   final Widget screen;
@@ -43,7 +44,8 @@ final navConfig = [
     ),
   ),
   NavConfig(
-    screen: const Center(child: Text("Profile Screen")),
+    screen: ProfileScreen(),
+    //  const Center(child: Text("Profile Screen")),
     barItem: BottomNavigationBarItem(
       icon: Image.asset('assets/images/profilem.png', width: 30, height: 30),
       label: "Profile",
