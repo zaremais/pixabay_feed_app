@@ -5,13 +5,14 @@ import 'package:pixabay_image_feed/features/images/domain/usecases/get_image_use
 import 'package:pixabay_image_feed/features/images/presentation/notifirers/image_notifire.dart';
 
 final imagesRepositoryProvider = Provider<ImagesRepository>((ref) {
-  return ImagesRepositoryImpl(); // или реальная реализация с Dio
+  return ImagesRepositoryImpl();
 });
 
 final getImagesUseCaseProvider = Provider<GetImagesUseCase>((ref) {
   return GetImagesUseCase(ref.read(imagesRepositoryProvider));
 });
 
-final imagesNotifierProvider = StateNotifierProvider<ImagesNotifier, ImagesState>((ref) {
-  return ImagesNotifier(useCase: ref.read(getImagesUseCaseProvider));
-});
+final imagesNotifierProvider =
+    StateNotifierProvider<ImagesNotifier, ImagesState>((ref) {
+      return ImagesNotifier(useCase: ref.read(getImagesUseCaseProvider));
+    });

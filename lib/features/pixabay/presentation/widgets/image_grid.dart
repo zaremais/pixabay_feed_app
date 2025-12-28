@@ -40,6 +40,7 @@ class ImageGrid extends StatelessWidget {
       child: Stack(
         children: [
           MasonryGridView.count(
+            key: ValueKey(images.hashCode),
             controller: scrollController,
 
             crossAxisCount: 2,

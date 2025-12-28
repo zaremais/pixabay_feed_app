@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:pixabay_image_feed/core/conatants/typedefs.dart';
+import 'package:pixabay_image_feed/features/pixabay/domain/entities/image_entity.dart';
 
 part 'image_model.g.dart';
 
@@ -24,4 +25,14 @@ class ImageModel {
   factory ImageModel.fromJson(JSON json) => _$ImageModelFromJson(json);
 
   JSON toJson() => _$ImageModelToJson(this);
+
+  ImageEntity toEntity() {
+    return ImageEntity(
+      id: id,
+      previewUrl: previewUrl,
+      largeImageUrl: largeImageUrl,
+      user: user,
+      tags: tags,
+    );
+  }
 }

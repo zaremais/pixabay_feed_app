@@ -32,7 +32,6 @@ class ImagesScreen extends ConsumerWidget {
                         child: Center(child: CircularProgressIndicator()),
                       )
                     : SliverMasonryGrid.count(
-                        // from flutter_staggered_grid_view
                         crossAxisCount: 2,
                         mainAxisSpacing: 12,
                         crossAxisSpacing: 12,
@@ -46,7 +45,6 @@ class ImagesScreen extends ConsumerWidget {
                           }
                           final img = state.items[index];
                           return GestureDetector(
-                            // onTap: () => _openDetail(context, img),
                             child: Image.network(
                               img.previewUrl,
                               fit: BoxFit.cover,

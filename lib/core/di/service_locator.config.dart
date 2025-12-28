@@ -20,8 +20,8 @@ import '../../features/boards/domain/repository/board_domain_repository.dart'
 import '../../features/boards/domain/usecases/get_board_use_case.dart' as _i358;
 import '../../features/boards/presentation/providers/board_notifire.dart'
     as _i2;
-import '../../features/pixabay/data/datasourses/pixabay_remote_data_source.dart'
-    as _i1015;
+import '../../features/pixabay/data/datasources/pixabay_remote_data_source.dart'
+    as _i35;
 import '../../features/pixabay/data/repositories/pixabay_repository._impl.dart'
     as _i773;
 import '../../features/pixabay/domain/repositories/pixabay_domain_repository.dart'
@@ -41,17 +41,18 @@ extension GetItInjectableX on _i174.GetIt {
     final gh = _i526.GetItHelper(this, environment, environmentFilter);
     gh.factory<_i455.LoggerInterceptor>(() => _i455.LoggerInterceptor());
     gh.factory<_i667.DioClient>(() => _i667.DioClient());
-    gh.factory<_i2.BoardNotifier>(() => _i2.BoardNotifier());
     gh.factory<_i897.PixabayNotifier>(() => _i897.PixabayNotifier());
-    gh.lazySingleton<_i1015.PixabayRemoteDataSource>(
-      () => _i1015.PixabayRemoteDataSourceImpl(gh<_i667.DioClient>()),
+    gh.factory<_i2.BoardNotifier>(() => _i2.BoardNotifier());
+    gh.lazySingleton<_i35.PixabayRemoteDataSource>(
+      () => _i35.PixabayRemoteDataSourceImpl(gh<_i667.DioClient>()),
     );
+
     gh.lazySingleton<_i5.BoardRemoteDataSource>(
       () => _i5.BoardRemoteDataSourceImpl(gh<_i667.DioClient>()),
     );
     gh.lazySingleton<_i603.PixabayDomainRepository>(
       () => _i773.PixabayRepositoryImpl(
-        remote: gh<_i1015.PixabayRemoteDataSource>(),
+        remote: gh<_i35.PixabayRemoteDataSource>(),
       ),
     );
     gh.factory<_i793.GetImageUsecase>(

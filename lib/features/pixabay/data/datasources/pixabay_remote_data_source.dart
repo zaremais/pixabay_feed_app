@@ -18,18 +18,36 @@ class PixabayRemoteDataSourceImpl implements PixabayRemoteDataSource {
   Future<List<ImageModel>> fetchImages({required ImageParams params}) async {
     final response = await dio.get(
       '',
-
       queryParameters: {
-       
-        'q': params.query.isEmpty ? 'nature' : params.query,
+        'q': params.query,
         'image_type': 'photo',
         'page': params.page,
         'per_page': params.perPage,
       },
     );
-  
+
+    if (response.data == null) {
+      throw Exception('Response data is null');
+    }
+
     final data = response.data as Map<String, dynamic>;
-    final hits = data['hits'] as List<dynamic>;
-    return hits.map((json) => ImageModel.fromJson(json)).toList();
+    
+    if (!data.containsKey('hits')) {
+      throw Exception('Invalid API response: missing "hits" field');
+    }
+
+    final hits = data['hits'];
+    if (hits is! List) {
+      throw Exception('Invalid API response: "hits" is not a list');
+    }
+
+    try {
+      return hits
+          .cast<Map<String, dynamic>>()
+          .map((json) => ImageModel.fromJson(json))
+          .toList();
+    } catch (e) {
+      throw Exception('Failed to parse image models: $e');
+    }
   }
 }

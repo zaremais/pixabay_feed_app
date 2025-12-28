@@ -9,72 +9,84 @@ import 'package:pixabay_image_feed/features/pixabay/presentation/notifier/provid
 @injectable
 class PixabayNotifier extends AsyncNotifier<List<ImageEntity>> {
   int page = 1;
-  String query = "";
-  bool _isLoadingNext = false;
-  Timer? _debounce;
+  String query = ""; // Оставляем как поле класса
 
-  bool get isLoadingNext => _isLoadingNext;
+  String get currentQuery => query;
 
   @override
   Future<List<ImageEntity>> build() async {
     return _loadPage(reset: true);
   }
 
-  Future<List<ImageEntity>> _loadPage({bool reset = false}) async {
+  Future<void> performSearch(String q) async {
+    final cleanQuery = q.trim();
+    if (cleanQuery.isEmpty) return;
+
+    query = cleanQuery;
+    page = 1;
+
+    state = const AsyncLoading(); // Показываем загрузку на экране
+
     try {
-      final usecase = ref.read(getPixabayUsecaseProvider);
+      // Явно получаем новые данные
+      final newData = await _loadPage(reset: true);
 
-      if (reset) {
-        page = 1;
-      }
-
-      final params = ImageParams(page: page, query: query, perPage: 50);
-      final newData = await usecase.execute(params: params);
-
-      if (reset) return newData;
-
-      final previousState = state;
-      if (previousState is AsyncData<List<ImageEntity>>) {
-        return [...previousState.value, ...newData];
-      }
-      return newData;
-    } catch (error, stackTrace) {
-      state = AsyncError(error, stackTrace);
-      rethrow;
+      // ВАЖНО: Передаем НОВЫЙ список (создаем копию через [...])
+      // Это гарантирует, что Riverpod заметит изменение
+      state = AsyncData([...newData]);
+    } catch (e, st) {
+      state = AsyncError(e, st);
     }
   }
 
+  Future<List<ImageEntity>> _loadPage({bool reset = false}) async {
+    final usecase = ref.read(getPixabayUsecaseProvider);
+    if (reset) page = 1;
+
+    // Используем query, который мы сохранили в классе
+    final params = ImageParams(
+      page: page,
+      query: query.isEmpty ? "nature" : query,
+      perPage: 50,
+    );
+
+    return await usecase.execute(params: params);
+  }
+
   Future<void> loadNextPage() async {
-    if (_isLoadingNext) return;
-    _isLoadingNext = true;
+    final currentState = state;
+    if (!currentState.hasValue) return;
+
+    final currentImages = currentState.value!;
+    if (currentImages.isEmpty) return;
+
+    page++;
 
     try {
-      page++;
-      final data = await _loadPage();
-      state = AsyncData(data);
-    } catch (error, stackTrace) {
-      state = AsyncError(error, stackTrace);
+      final newImages = await _loadPage();
+      if (newImages.isEmpty) {
+        // Если новых изображений нет, откатываем страницу
+        page--;
+        return;
+      }
+
+      // Добавляем новые изображения к существующим
+      state = AsyncData([...currentImages, ...newImages]);
+    } catch (e, st) {
+      // При ошибке откатываем страницу
       page--;
-    } finally {
-      _isLoadingNext = false;
+      state = AsyncError(e, st);
     }
   }
 
   Future<void> refresh() async {
+    page = 1;
     state = const AsyncLoading();
-    final data = await _loadPage(reset: true);
-    state = AsyncData(data);
-  }
-
-  Future<void> changeQuery(String q) async {
-    query = q;
-
-    _debounce?.cancel();
-    _debounce = Timer(const Duration(microseconds: 500), () async {
-      state = const AsyncLoading();
-      final data = await _loadPage(reset: true);
-      state = AsyncData(data);
-    });
+    try {
+      final newData = await _loadPage(reset: true);
+      state = AsyncData(newData);
+    } catch (e, st) {
+      state = AsyncError(e, st);
+    }
   }
 }
-

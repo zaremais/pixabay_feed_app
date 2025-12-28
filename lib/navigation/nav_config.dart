@@ -3,7 +3,7 @@ import 'package:pixabay_image_feed/core/config/themes/app_icons.dart';
 import 'package:pixabay_image_feed/features/boards/presentation/screens/board_screen.dart';
 import 'package:pixabay_image_feed/features/home/presentation/screens/home_screen.dart';
 import 'package:pixabay_image_feed/features/images/presentation/screens/images_screen.dart';
-import 'package:pixabay_image_feed/features/pixabay/presentation/screens/inifiniti_screen.dart';
+import 'package:pixabay_image_feed/features/messages/presentation/screens/messages_screen.dart';
 import 'package:pixabay_image_feed/features/profile/presentation/screens/profile_screen.dart';
 
 class NavConfig {
@@ -30,14 +30,14 @@ final navConfig = [
   ),
 
   NavConfig(
-    screen: const Center(child: InfiniteListScreen()),
+    screen: Center(child: ImagesScreen()),
     barItem: BottomNavigationBarItem(
       icon: Image.asset('assets/images/tabadd.png'),
       label: "",
     ),
   ),
   NavConfig(
-    screen: const Center(child: ImagesScreen()),
+    screen: const Center(child: MessagesScreen()),
     barItem: BottomNavigationBarItem(
       icon: Icon(AppIcons.message, size: 34),
       label: "Messages",

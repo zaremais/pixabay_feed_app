@@ -50,11 +50,7 @@ class _PixabayScreenState extends ConsumerState<PixabayScreen> {
   }
 
   Future<void> _onRefresh() async {
-    return ref.read(pixabayProvider.notifier).refresh();
-  }
-
-  void _onSearchChanged(String query) {
-    ref.read(pixabayProvider.notifier).changeQuery(query);
+    await ref.read(pixabayProvider.notifier).refresh();
   }
 
   void _showImageDetail(ImageEntity image) {
@@ -76,7 +72,6 @@ class _PixabayScreenState extends ConsumerState<PixabayScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(pixabayProvider);
-
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -91,8 +86,13 @@ class _PixabayScreenState extends ConsumerState<PixabayScreen> {
                   Expanded(
                     child: SearchTextField(
                       searchController: _searchController,
-                      onSearchChanged: _onSearchChanged,
+
                       hintText: 'Search images...',
+                      onSearchTap: () {
+                        final text = _searchController.text.trim();
+                        ref.read(pixabayProvider.notifier).performSearch(text);
+                        FocusScope.of(context).unfocus();
+                      },
                     ),
                   ),
                 ],
@@ -107,6 +107,9 @@ class _PixabayScreenState extends ConsumerState<PixabayScreen> {
                     onPressed: _onRefresh,
                   ),
                   data: (images) => ImageGrid(
+                    key: ValueKey(
+                      ref.read(pixabayProvider.notifier).currentQuery,
+                    ),
                     images: images,
                     scrollController: _scrollController,
                     isLoadingNext: _isLoadingNext,

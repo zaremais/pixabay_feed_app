@@ -1,7 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pixabay_image_feed/core/colors/colors.dart';
 import 'package:pixabay_image_feed/core/utils/app_size.dart';
 import 'package:pixabay_image_feed/core/utils/gen/assets.gen.dart';
 import 'package:pixabay_image_feed/core/widgets/app_divider.dart';
@@ -67,7 +66,6 @@ class ProfileScreen extends StatelessWidget {
                   child: CupertinoSwitch(
                     value: true,
                     onChanged: (final value) {},
-                    // activeTrackColor: CoffeeAppColors.secondaryColor,
                   ),
                 ),
                 padding: EdgeInsets.zero,

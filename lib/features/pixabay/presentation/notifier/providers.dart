@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 import 'package:pixabay_image_feed/core/network/dio_client.dart';
-import 'package:pixabay_image_feed/features/pixabay/data/datasourses/pixabay_remote_data_source.dart';
+import 'package:pixabay_image_feed/features/pixabay/data/datasources/pixabay_remote_data_source.dart';
 import 'package:pixabay_image_feed/features/pixabay/data/repositories/pixabay_repository._impl.dart';
 import 'package:pixabay_image_feed/features/pixabay/domain/entities/image_entity.dart';
 import 'package:pixabay_image_feed/features/pixabay/domain/repositories/pixabay_domain_repository.dart';
@@ -30,8 +30,6 @@ final getPixabayUsecaseProvider = Provider<GetImageUsecase>((ref) {
   return GetImageUsecase(repository: repo);
 });
 
-
-
 final pixabayProvider =
     AsyncNotifierProvider<PixabayNotifier, List<ImageEntity>>(
       PixabayNotifier.new,
@@ -41,4 +39,3 @@ final pagingProvider =
     StateNotifierProvider<PagingNotifier, AsyncValue<List<int>>>(
       (ref) => PagingNotifier(),
     );
-

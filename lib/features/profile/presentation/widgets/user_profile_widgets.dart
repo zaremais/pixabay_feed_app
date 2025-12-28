@@ -16,11 +16,7 @@ class UserProfileImageWidget extends StatelessWidget {
         height: height ?? 50.0,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(100),
-          child: Image.asset(
-            'assets/images/profilem.png',
-            // Assets.images.coffeeApp.profileImg.path,
-            fit: BoxFit.cover,
-          ),
+          child: Image.asset('assets/images/profilem.png', fit: BoxFit.cover),
         ),
       ),
     );

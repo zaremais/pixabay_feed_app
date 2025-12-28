@@ -21,12 +21,8 @@ class DioClient {
     dio.interceptors.add(LogInterceptor(requestBody: true, responseBody: true));
   }
 
-  Future<Response> get(
-    String path, {
-    Map<String, dynamic>? query,
-    required Map<String, Object> queryParameters,
-  }) {
-    return dio.get(path, queryParameters: query);
+  Future<Response> get(String path, {Map<String, dynamic>? queryParameters}) {
+    return dio.get(path, queryParameters: queryParameters);
   }
 }
 
