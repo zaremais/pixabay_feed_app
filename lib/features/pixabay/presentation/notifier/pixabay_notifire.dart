@@ -9,7 +9,7 @@ import 'package:pixabay_image_feed/features/pixabay/presentation/notifier/provid
 @injectable
 class PixabayNotifier extends AsyncNotifier<List<ImageEntity>> {
   int page = 1;
-  String query = ""; // Оставляем как поле класса
+  String query = "";
 
   String get currentQuery => query;
 
@@ -25,14 +25,11 @@ class PixabayNotifier extends AsyncNotifier<List<ImageEntity>> {
     query = cleanQuery;
     page = 1;
 
-    state = const AsyncLoading(); // Показываем загрузку на экране
+    state = const AsyncLoading();
 
     try {
-      // Явно получаем новые данные
       final newData = await _loadPage(reset: true);
 
-      // ВАЖНО: Передаем НОВЫЙ список (создаем копию через [...])
-      // Это гарантирует, что Riverpod заметит изменение
       state = AsyncData([...newData]);
     } catch (e, st) {
       state = AsyncError(e, st);
@@ -43,7 +40,6 @@ class PixabayNotifier extends AsyncNotifier<List<ImageEntity>> {
     final usecase = ref.read(getPixabayUsecaseProvider);
     if (reset) page = 1;
 
-    // Используем query, который мы сохранили в классе
     final params = ImageParams(
       page: page,
       query: query.isEmpty ? "nature" : query,
@@ -65,15 +61,12 @@ class PixabayNotifier extends AsyncNotifier<List<ImageEntity>> {
     try {
       final newImages = await _loadPage();
       if (newImages.isEmpty) {
-        // Если новых изображений нет, откатываем страницу
         page--;
         return;
       }
 
-      // Добавляем новые изображения к существующим
       state = AsyncData([...currentImages, ...newImages]);
     } catch (e, st) {
-      // При ошибке откатываем страницу
       page--;
       state = AsyncError(e, st);
     }
